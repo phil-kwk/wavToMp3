@@ -24,18 +24,26 @@
  * Created on 11. November 2020, 13:41
  */
 
+#include <vector>
+#include <thread>
+#include <cstdint>
+
 #include "ArgumentParser.h"
+#include "FileEncodingTask.h"
 
 /*
  * 
  */
 int main(int argc, char* argv[]) {
-    
+
 
     auto files = encoder::getFilesToEncode(argc, argv);
 
-    for (auto f : files) {
-        std::cout << f << "\n";
+    const std::size_t concurrentlyEncoding = 2;
+
+    for (auto filename : files) {
+        std::thread t(encoder::startFileEncoding, filename, 10000000, 4);
+        t.join();
     }
 
     return 0;
