@@ -13,16 +13,24 @@
 #include "TestWaveData.h"
 
 #include "../src/ReadFile.h"
+#include "../src/WriteFile.h"
+
+#include "TestWaveData.h"
 
 namespace encoder {
 
     namespace {
-        const std::string pathname = "/mnt/c/wavToMp3encoder/testfiles/testcase.wav";
-        const std::string dirname = "/mnt/c/wavToMp3encoder/testfiles";
+        const std::string pathname = "testcase.wav";
     }
 
     class ReadFileTest : public testing::Test {
     protected:
+        
+        void SetUp(){
+            WriteFile file(pathname);
+            file.write( testfile_Buffer() );
+        }
+
     };
 
     TEST_F(ReadFileTest, constructor_ok) {
@@ -41,15 +49,16 @@ namespace encoder {
             EXPECT_EQ(exc.code(), OPEN_READFILE_ERROR);
         }
     }
-
-    TEST_F(ReadFileTest, constructor_Exception_Dir) {
-        try {
-            ReadFile read{dirname};
-            //            FAIL() << "That was not expected";TODO
-        } catch (ExceptionReadFile exc) {
-            EXPECT_EQ(exc.code(), OPEN_READFILE_ERROR);
-        }
-    }
+    
+//deprecated
+//    TEST_F(ReadFileTest, constructor_Exception_Dir) {
+//        try {
+//            ReadFile read{dirname};
+//            //            FAIL() << "That was not expected";TODO
+//        } catch (ExceptionReadFile exc) {
+//            EXPECT_EQ(exc.code(), OPEN_READFILE_ERROR);
+//        }
+//    }
 
     TEST_F(ReadFileTest, get_NextElements) {
         const int number = 9999;

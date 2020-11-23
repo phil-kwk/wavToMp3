@@ -23,13 +23,15 @@
 
 namespace encoder {
     namespace {
-        std::string testfileMusik{"/mnt/c/wavToMp3encoder/testfiles/SkyWorld_sint16_pcm.wav"};
-        std::string testfile{"/mnt/c/wavToMp3encoder/testfiles/testcase.wav"};
-        std::string testfilecountUp30s{"/mnt/c/wavToMp3encoder/testfiles/countUp30.wav"};
+        const std::string testfile{"testcase.wav"};
     }
 
     class EncoderTest : public testing::Test {
     protected:
+        void SetUp(){
+            WriteFile file(testfile);
+            file.write(testfile_Buffer());
+        }
     };
 
     TEST_F(EncoderTest, TestEncodeSeriell) {
