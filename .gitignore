@@ -1,0 +1,36 @@
+#ignore Folders
+/build
+/gtest
+/lame
+/testfiles
+
+#Project Files to Ignore
+/nbproject
+
+#CMakeFiles to Ignore
+*/CMakeFiles
+CMakeCache.txt
+Makefile
+build.log
+compile_commands.json
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.o
+
+# Compiled Dynamic libraries
+*.so
+*.dll
+
+# Compiled Static libraries
+*.a
+*.lib
+
+# Executables
+*.exe
+
+#Test Output
+*.mp3
+*.log

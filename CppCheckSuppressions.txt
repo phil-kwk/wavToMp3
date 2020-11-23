@@ -1,0 +1,3 @@
+lame/
+gtest/
+test/

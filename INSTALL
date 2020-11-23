@@ -1,0 +1,21 @@
+The wavToMp3 program statically links libmp3lame.a for mp3 encoding.
+
+This version of wavToMp3 was build with LAME version 3.100
+
+To compile wavToMp3 you will need lame build or installed on your system
+
+Follow the Steps to build wavToMp3:
+
+1. compile current version of lame for your system lame is needed for mp3 encoding
+
+#load lame source code to <project>/lame (or other location on your system)
+cd <project>/lame/lame-<version>
+./configure
+make
+
+2. compile the wavTomp3encoder project
+cd <project>
+mkdir build
+cd build
+cmake ..
+make
