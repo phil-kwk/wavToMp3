@@ -23,6 +23,7 @@ set(SRCS
     ReadFile.cpp
     WriteFile.cpp
     FileEncodingTask.cpp
+    ArgumentParser.cpp
 )
 
 set(LIBS

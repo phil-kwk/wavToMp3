@@ -12,4 +12,4 @@ execPath=/../build/src/wavToMp3
 .$execPath
 
 #Search for wav Files in test folder
-.$execPath ../test
+.$execPath /mnt/c/wavToMp3encoder/testfiles

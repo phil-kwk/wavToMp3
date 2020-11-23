@@ -18,26 +18,23 @@
  */
 
 /* 
- * File:   main.cpp
+ * File:   ArgumentParser.h
  * Author: Philipp Kaaden
  *
- * Created on 11. November 2020, 13:41
+ * Created on 23. November 2020, 10:33
  */
 
-#include "ArgumentParser.h"
+#ifndef ARGUMENTPARSER_H
+#define ARGUMENTPARSER_H
 
-/*
- * 
- */
-int main(int argc, char* argv[]) {
+#include <vector>
+#include <iostream>
+
+namespace encoder {
     
+    const std::vector< std::string > getFilesToEncode(int argc, char* argv[]);
 
-    auto files = encoder::getFilesToEncode(argc, argv);
+}//end namespace
 
-    for (auto f : files) {
-        std::cout << f << "\n";
-    }
-
-    return 0;
-}
+#endif /* ARGUMENTPARSER_H */
 
