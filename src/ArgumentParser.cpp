@@ -58,8 +58,10 @@ namespace encoder {
 
         std::vector< std::string > wavfiles;
         for (auto a : args) {
+            std::cout << a << "\n";
             if (directoryExists(a)) {
-                wavfiles = getFileTypeFrom(a, "wav");
+                auto files = getFileTypeFrom(a, "wav");
+                wavfiles.insert(wavfiles.begin(), files.begin(), files.end());
             }
         }
 
