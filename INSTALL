@@ -1,8 +1,10 @@
 The wavToMp3 program statically links libmp3lame.a for mp3 encoding.
 
-This version of wavToMp3 was build with LAME version 3.100
+This version of wavToMp3 was build with LAME version 3.100.
 
-To compile wavToMp3 you will need lame build or installed on your system
+Building the project has been testet on Ubuntu 18.04.5 and cygwin 3.1.7(0.340/5/3).
+
+To compile the wavToMp3 Project you will need libmp3lame.a and gtest for unit testing
 
 Follow the Steps to build wavToMp3:
 
