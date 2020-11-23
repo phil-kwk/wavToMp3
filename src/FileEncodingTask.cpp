@@ -63,41 +63,40 @@ namespace encoder {
                 const std::size_t bufferSize) {
             return bufferSize / wave.fmt.blockAlignment;
         }
-    }
-    
-    const bool using_uint8Samples(const WaveFmtHeader& fmt) {
-        if ((fmt.blockAlignment / fmt.channels) == 1) {
-            return true;
+
+        const bool using_uint8Samples(const WaveFmtHeader& fmt) {
+            if ((fmt.blockAlignment / fmt.channels) == 1) {
+                return true;
+            }
+            return false;
         }
-        return false;
+
+        const bool using_int16Samples(const WaveFmtHeader& fmt) {
+            if ((fmt.blockAlignment / fmt.channels) == 2) {
+                return true;
+            }
+            return false;
+        }
+
+        const bool using_int32Samples(const WaveFmtHeader& fmt) {
+            if ((fmt.blockAlignment / fmt.channels) == 4) {
+                return true;
+            }
+            return false;
+        }
+
+        const bool checkSampleFormat(const WaveFmtHeader fmt) {
+            if (using_int32Samples(fmt)) {
+                return true;
+            } else if (using_int16Samples(fmt)) {
+                return true;
+            } else if (using_uint8Samples(fmt)) {
+                return true;
+            }
+            return false;
+        }
     }
 
-    const bool using_int16Samples(const WaveFmtHeader& fmt) {
-        if ((fmt.blockAlignment / fmt.channels) == 2) {
-            return true;
-        }
-        return false;
-    }
-
-    const bool using_int32Samples(const WaveFmtHeader& fmt) {
-        if ((fmt.blockAlignment / fmt.channels) == 4) {
-            return true;
-        }
-        return false;
-    }
-    
-    
-    const bool checkSampleFormat(const WaveFmtHeader fmt){
-        if( using_int32Samples(fmt)){
-            return true;
-        }else if(using_int16Samples(fmt)){
-            return true;
-        }else if(using_uint8Samples(fmt)){
-            return true;
-        }
-        return false;
-    }
-    
     void startFileEncoding(const std::string filename,
             const std::size_t max_memory_consumtion,
             const std::size_t numberThreads) {
@@ -108,38 +107,36 @@ namespace encoder {
         try {
             wave = get_WaveFormat(buffer);
         } catch (ParseWAVFileError exc) {
-            std::cout << filename <<" ParseWAVFileError " << exc.code() << "\n";
+            std::cout << filename << " ParseWAVFileError " << exc.code() << "\n";
             return;
         }
-        
-        
-        if( !checkSampleFormat( wave.fmt )){
+
+        if (!checkSampleFormat(wave.fmt)) {
             return;
         }
-        
+
         std::cout << getOutputFileName(filename);
         read.next(getDataStartPosition(buffer));
-        
+
         const std::size_t BYTES_READ_FROM_FILE = floor(max_memory_consumtion / PCM_SAMPLES_PER_MP3_FRAME) * PCM_SAMPLES_PER_MP3_FRAME;
-        
+
         WriteFile write(getOutputFileName(filename));
+        std::vector<uint8_t> mp3Frames;
         do {
             buffer = read.next(BYTES_READ_FROM_FILE);
             if (using_int16Samples(wave.fmt)) {
                 auto pcm = get_pcm_Samples<int16_t>(buffer, getSampleSize(wave, buffer.size()), wave.fmt.channels);
-                auto mp3 = wavToMp3Concurrently(wave.fmt, pcm, numberThreads);
-                write.write(mp3);
+                mp3Frames = wavToMp3Concurrently(wave.fmt, pcm, numberThreads);
             } else if (using_int32Samples(wave.fmt)) {
                 auto pcm = get_pcm_Samples<int32_t>(buffer, getSampleSize(wave, buffer.size()), wave.fmt.channels);
-                auto mp3 = wavToMp3Concurrently(wave.fmt, pcm, numberThreads);
-                write.write(mp3);
-            }else if (using_uint8Samples(wave.fmt)) {
+                mp3Frames = wavToMp3Concurrently(wave.fmt, pcm, numberThreads);
+            } else if (using_uint8Samples(wave.fmt)) {
                 auto pcm = get_pcm_Samples<uint8_t>(buffer, getSampleSize(wave, buffer.size()), wave.fmt.channels);
-                auto mp3 = wavToMp3Concurrently(wave.fmt, pcm, numberThreads);
-                write.write(mp3);
+                mp3Frames = wavToMp3Concurrently(wave.fmt, pcm, numberThreads);
             } else {
                 return;
             }
+            write.write(mp3Frames);
         } while (buffer.size() == BYTES_READ_FROM_FILE);
         std::cout << " done" << "\n";
     }

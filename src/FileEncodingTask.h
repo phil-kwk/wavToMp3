@@ -39,11 +39,11 @@ namespace encoder {
     /**
      * @hint start in new thread std::thread t(startFileEncoding, filename, 10000000, 4);
      * @param filename
-     * @param max_memory_consumtion
-     * @param numberThreads
+     * @param preffered_memory_consumtion
+     * @param numberThreads (if 0 then std thread hardware concurency value is used)
      */
     void startFileEncoding(const std::string filename, 
-            const std::size_t max_memory_consumtion = 10000000,
+            const std::size_t preffered_memory_consumtion = 10000000,
             const std::size_t numberThreads = 4);
 
 }//end namespace
