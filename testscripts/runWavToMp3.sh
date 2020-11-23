@@ -9,7 +9,7 @@
 execPath=/../build/src/wavToMp3
 
 #No Arguments
-.$execPath
+.$execPath .
 
 #Search for wav Files in test folder
-.$execPath /mnt/c/wavToMp3encoder/testfiles
+.$execPath /mnt/c/wavToMp3encoder/testfiles/
