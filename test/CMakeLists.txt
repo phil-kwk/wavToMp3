@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION  3.0)
-set(NAME testcases)
+set(NAME wavToMp3UnitTests)
 project(${NAME} CXX)
 
 enable_testing()
