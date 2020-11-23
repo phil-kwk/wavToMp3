@@ -26,3 +26,8 @@ The wavToMp3 encoder takes Directory Paths as arguments and try's to encode all 
 * the Error Handling needs improvement
 * Refactoring for better readability is needed
 * some parts are still missing good unit testing
+
+
+## Simple Call Diagramm
+
+![Call Diagramm](/doc/Call_Diagramm_wavToMp3.png)
