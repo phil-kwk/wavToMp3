@@ -11,10 +11,12 @@ Follow the Steps to build wavToMp3:
 #create directory for lame
 mkdir <project>/lame/
 
-#download lame source code to <project>/lame
+#download and extract lame source code to <project>/lame
+wget https://downloads.sourceforge.net/project/lame/lame/3.100/lame-3.100.tar.gz
+tar -zxvf lame-3.100.tar.gz
 
 #build lame (out of source build also possible you may have to adjust the linker directories in <project>/src/CMakeLists.txt and <project>/test/CMakeLists.txt )
-cd lame-<version>
+cd lame-3.100
 ./configure
 make
 
