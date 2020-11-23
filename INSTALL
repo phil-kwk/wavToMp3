@@ -18,6 +18,8 @@ cd lame-<version>
 ./configure
 make
 
+#hint for lame build on cygwin if error cannot export lame_init_old: symbol appears see: https://sourceforge.net/p/lame/bugs/487/ libs should compile afterwards
+
 
 2. (*optional) for gtest unit test download and compile gtest on your system
 mkdir <project>/gtest

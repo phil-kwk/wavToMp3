@@ -24,14 +24,9 @@ set(SRCS
     WriteFile.cpp
     FileEncodingTask.cpp
 )
-if(${CYGWIN})
-    set(LAME_LIBS libmp3lame.dll.a)
-else()
-    set(LAME_LIBS libmp3lame.a)
-endif(${CYGWIN})
 
 set(LIBS
-    ${LAME_LIBS}
+    libmp3lame.a
     pthread
     m
 )

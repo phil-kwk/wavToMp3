@@ -5,7 +5,9 @@ project(${NAME} CXX)
 enable_testing()
 
 #during cygwin compilation strict c++11 leads to problems with gtest port
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ")
+if(NOT ${CYGWIN})
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ")
+endif()
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/../gtest/googletest/googletest/include
@@ -38,16 +40,10 @@ add_executable(${NAME}
     ${CMAKE_CURRENT_SOURCE_DIR}/../src/FileEncodingTask.cpp
 )
 
-if(${CYGWIN})
-    set(LAME_LIBS libmp3lame.dll.a)
-else()
-    set(LAME_LIBS libmp3lame.a)
-endif(${CYGWIN})
-
 set(LIBS 
     libgtest.a 
     libgtest_main.a
-    ${LAME_LIBS}
+    libmp3lame.a
     pthread
     m
 )
