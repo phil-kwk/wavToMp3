@@ -3,6 +3,7 @@
 /gtest
 /lame
 /testfiles
+/wavToMp3
 
 #Project Files to Ignore
 /nbproject

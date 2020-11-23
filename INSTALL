@@ -8,12 +8,29 @@ Follow the Steps to build wavToMp3:
 
 1. compile current version of lame for your system lame is needed for mp3 encoding
 
-#load lame source code to <project>/lame (or other location on your system)
-cd <project>/lame/lame-<version>
+#create directory for lame
+mkdir <project>/lame/
+
+#download lame source code to <project>/lame
+
+#build lame (out of source build also possible you may have to adjust the linker directories in <project>/src/CMakeLists.txt and <project>/test/CMakeLists.txt )
+cd lame-<version>
 ./configure
 make
 
-2. compile the wavTomp3encoder project
+
+2. (*optional) for gtest unit test download and compile gtest on your system
+mkdir <project>/gtest
+cd <project>/gtest
+git clone https://github.com/google/googletest.git
+cd googletest
+#build gtest (out of source build also possible you may have to adjust the linker directories in <project>/test/CMakeLists.txt)
+cmake .
+make
+
+3. compile the wavToMp3 project
+
+#depending on the position of lame lib  and gtest lib you may have to adjust include and lib directory's in <project>/src/CMakeLists.txt and <project>/test/CMakeLists.txt
 cd <project>
 mkdir build
 cd build
