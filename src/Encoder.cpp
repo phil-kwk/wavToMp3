@@ -28,7 +28,7 @@
 #include "LameEncoder.h"
 
 #include "Formats.h"
-#include "Converter.h"
+#include "SampleConverter.h"
 
 #include <stdint.h>
 

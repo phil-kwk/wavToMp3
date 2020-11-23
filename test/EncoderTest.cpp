@@ -15,7 +15,7 @@
 #include "../src/ReadFile.h"
 #include "../src/WriteFile.h"
 #include "../src/Parser.h"
-#include "../src/Converter.h"
+#include "../src/SampleConverter.h"
 
 #include "TestWaveData.h"
 

@@ -31,7 +31,7 @@ add_executable(${NAME}
     LameEncodingFileTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../src/LameEncoder.cpp
     ConverterTest.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/../src/Converter.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../src/SampleConverter.cpp
     ReadFileTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../src/ReadFile.cpp
     WriteFileTest.cpp

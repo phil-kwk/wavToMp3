@@ -10,7 +10,7 @@
 #include <gtest/gtest.h>
 #include <cmath>
 
-#include "../src/Converter.h"
+#include "../src/SampleConverter.h"
 
 #include "TestWaveData.h"
 

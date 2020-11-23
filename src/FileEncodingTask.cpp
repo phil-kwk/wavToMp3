@@ -27,7 +27,7 @@
 #include "FileEncodingTask.h"
 
 #include "Parser.h"
-#include "Converter.h"
+#include "SampleConverter.h"
 #include "Encoder.h"
 
 #include <thread>

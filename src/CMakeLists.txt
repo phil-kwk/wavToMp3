@@ -19,7 +19,7 @@ set(SRCS
     Encoder.cpp
     LameEncoder.cpp
     FileSystem.cpp
-    Converter.cpp
+    SampleConverter.cpp
     ReadFile.cpp
     WriteFile.cpp
     FileEncodingTask.cpp

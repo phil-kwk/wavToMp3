@@ -36,10 +36,7 @@
  */
 int main(int argc, char* argv[]) {
 
-
     auto files = encoder::getFilesToEncode(argc, argv);
-
-    const std::size_t concurrentlyEncoding = 2;
 
     for (auto filename : files) {
         std::thread t(encoder::startFileEncoding, filename, 10000000, 4);

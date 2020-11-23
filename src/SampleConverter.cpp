@@ -24,7 +24,7 @@
  * Created on 19. November 2020, 07:09
  */
 
-#include "Converter.h"
+#include "SampleConverter.h"
 
 #include <cmath>
 #include <algorithm>

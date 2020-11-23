@@ -25,7 +25,7 @@
  */
 
 #include "Parser.h"
-#include "Converter.h"
+#include "SampleConverter.h"
 
 #include <vector>
 #include <iostream>
