@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
     auto files = encoder::getFilesToEncode(argc, argv);
 
     for (auto filename : files) {
-        std::thread t(encoder::startFileEncoding, filename, 10000000, 4);
+        std::thread t(encoder::startFileEncoding, filename, pow(2,26), 4);
         t.join();
     }
 

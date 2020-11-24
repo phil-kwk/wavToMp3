@@ -25,11 +25,7 @@
  */
 
 #include <thread>
-#include <mutex>
-
-#include "ReadFile.h"
-#include "WriteFile.h"
-#include "Formats.h"
+#include <cmath>
 
 #ifndef FILEENCODINGTASK_H
 #define FILEENCODINGTASK_H
@@ -37,13 +33,13 @@
 namespace encoder {
     
     /**
-     * @hint start in new thread std::thread t(startFileEncoding, filename, 10000000, 4);
+     * @hint start in new thread std::thread t(startFileEncoding, filename, pow(2,26), 4);//2^26 ~ 67 MB
      * @param filename
-     * @param preffered_memory_consumtion
+     * @param preferred_memory_consumtion in Byte imprecise heap allocation preffered to be used by this function by the caller
      * @param numberThreads (if 0 then std thread hardware concurency value is used)
      */
     void startFileEncoding(const std::string filename, 
-            const std::size_t preffered_memory_consumtion = 10000000,
+            const std::size_t preferred_memory_consumtion = pow(2,26),
             const std::size_t numberThreads = 4);
 
 }//end namespace

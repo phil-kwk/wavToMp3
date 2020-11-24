@@ -29,6 +29,8 @@
 #include "Parser.h"
 #include "SampleConverter.h"
 #include "Encoder.h"
+#include "ReadFile.h"
+#include "WriteFile.h"
 
 #include <thread>
 #include <iostream>
@@ -40,7 +42,7 @@ namespace encoder {
 
         const std::size_t PCM_SAMPLES_PER_MP3_FRAME = 1152;
 
-
+        const std::size_t HEAP_ALLOCATION_MULTIPLIER = 6;//estimated by valgrind massif measurments
         const std::size_t BYTES_PEEK_INTO_FILE = 1000;
 
         const std::string WAVE_FILE_EXTENSION{".wav"};
@@ -95,10 +97,14 @@ namespace encoder {
             }
             return false;
         }
+        
+        const std::size_t getBytesToReadFromFile(const std::size_t preferred_memory_consumtion){
+            return floor(preferred_memory_consumtion / (PCM_SAMPLES_PER_MP3_FRAME  * HEAP_ALLOCATION_MULTIPLIER) ) * PCM_SAMPLES_PER_MP3_FRAME;
+        }
     }
 
     void startFileEncoding(const std::string filename,
-            const std::size_t max_memory_consumtion,
+            const std::size_t preferred_memory_consumtion,
             const std::size_t numberThreads) {
 
         ReadFile read(filename);
@@ -118,9 +124,9 @@ namespace encoder {
         std::cout << getOutputFileName(filename);
         read.next(getDataStartPosition(buffer));
 
-        const std::size_t BYTES_READ_FROM_FILE = floor(max_memory_consumtion / PCM_SAMPLES_PER_MP3_FRAME) * PCM_SAMPLES_PER_MP3_FRAME;
+        const std::size_t BYTES_READ_FROM_FILE = getBytesToReadFromFile(preferred_memory_consumtion);
 
-        WriteFile write(getOutputFileName(filename));
+        WriteFile wfile(getOutputFileName(filename));
         std::vector<uint8_t> mp3Frames;
         do {
             buffer = read.next(BYTES_READ_FROM_FILE);
@@ -134,9 +140,9 @@ namespace encoder {
                 auto pcm = get_pcm_Samples<uint8_t>(buffer, getSampleSize(wave, buffer.size()), wave.fmt.channels);
                 mp3Frames = wavToMp3Concurrently(wave.fmt, pcm, numberThreads);
             } else {
-                return;
+                return;//Sample Typ currently not supported
             }
-            write.write(mp3Frames);
+            wfile.write(mp3Frames);
         } while (buffer.size() == BYTES_READ_FROM_FILE);
         std::cout << " done" << "\n";
     }
