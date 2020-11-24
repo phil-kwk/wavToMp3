@@ -168,21 +168,9 @@ namespace encoder {
         }
         return cspcm;
     }
-
-    template const ChannelContainer<uint8_t> get_pcm_Samples<uint8_t>(
-            const std::vector<uint8_t>& samples,
-            const std::size_t numberOfSamples,
-            const std::size_t numberChannels);
-
-    template const ChannelContainer<int16_t> get_pcm_Samples<int16_t>(
-            const std::vector<uint8_t>& samples,
-            const std::size_t numberOfSamples,
-            const std::size_t numberChannels);
-
-    template const ChannelContainer<int32_t> get_pcm_Samples<int32_t>(
-            const std::vector<uint8_t>& samples,
-            const std::size_t numberOfSamples,
-            const std::size_t numberChannels);
+    template const ChannelContainer<uint8_t> get_pcm_Samples<uint8_t>(const std::vector<uint8_t>& samples, const std::size_t numberOfSamples, const std::size_t numberChannels);
+    template const ChannelContainer<int16_t> get_pcm_Samples<int16_t>(const std::vector<uint8_t>& samples, const std::size_t numberOfSamples, const std::size_t numberChannels);
+    template const ChannelContainer<int32_t> get_pcm_Samples<int32_t>(const std::vector<uint8_t>& samples, const std::size_t numberOfSamples, const std::size_t numberChannels);
 
     template<typename T>
     const bool checkChannelSampleSizeEqual(
@@ -199,7 +187,6 @@ namespace encoder {
         }
         return false;
     }
-
     template const bool checkChannelSampleSizeEqual(const ChannelContainer<uint8_t>& channelContainer);
     template const bool checkChannelSampleSizeEqual(const ChannelContainer<int16_t>& channelContainer);
     template const bool checkChannelSampleSizeEqual(const ChannelContainer<int32_t>& channelContainer);
@@ -228,13 +215,13 @@ namespace encoder {
         }
 
         scc.resize(buckets); //
-        
+
         std::size_t numberSlices = 0;
         for (std::size_t c = 0; c < numberChannels; c++) {
             Channel<T> channel = channelContainer.at(c);
             std::vector< Channel<T> > channelSlice =
                     slice_Multiple1152<T>(channel, buckets);
-            
+
             numberSlices = channelSlice.size();
             for (std::size_t b = 0; b < numberSlices; b++) {
                 scc.at(b).push_back(channelSlice.at(b));
@@ -243,18 +230,9 @@ namespace encoder {
         scc.resize(numberSlices); //
         return scc;
     }
-
-    template const std::vector<ChannelContainer<uint8_t>> slice_PCMSamples <uint8_t>(
-            const ChannelContainer<uint8_t>& samples,
-            const uint8_t buckets);
-
-    template const std::vector<ChannelContainer<int16_t>> slice_PCMSamples <int16_t>(
-            const ChannelContainer<int16_t>& samples,
-            const uint8_t buckets);
-
-    template const std::vector<ChannelContainer<int32_t>> slice_PCMSamples <int32_t>(
-            const ChannelContainer<int32_t>& samples,
-            const uint8_t buckets);
+    template const std::vector<ChannelContainer<uint8_t>> slice_PCMSamples <uint8_t>(const ChannelContainer<uint8_t>& samples, const uint8_t buckets);
+    template const std::vector<ChannelContainer<int16_t>> slice_PCMSamples <int16_t>(const ChannelContainer<int16_t>& samples, const uint8_t buckets);
+    template const std::vector<ChannelContainer<int32_t>> slice_PCMSamples <int32_t>(const ChannelContainer<int32_t>& samples, const uint8_t buckets);
 
     template<typename T>
     const ChannelContainer<T> combine_PCMSamples(

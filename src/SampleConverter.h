@@ -54,7 +54,7 @@ namespace encoder {
      * @param buffer containing first sample at first position
      * @param numberSamples per channel
      * @param numberChannels in buffer
-     * @return 
+     * @return ChannelContainer<SampleType>
      * @throws Exception_PCM_Sample_Slicer(CHANNEL_TYPE_NOT_SUPPORTED)
      */
     template<typename SampleType>
@@ -67,20 +67,25 @@ namespace encoder {
      * slices the PCMSamples into numberOfSlices with Multiple of 1152 
      * if samples <= 1152 only one slice is returned
      * used for getting slices of PCMSamples for parallel encoding by multiple threads
-     * @param samples (PCMSamples_Stereo_int16 for Slicing)
-     * @param buckets (size of buckets to produce) it may produce less buckets for 1152 allignement, 0 is interpreted as 1
+     * @param samples (ChannelContainer for Slicing)
+     * @param numBuckets (number of Buckets to Slice the samples into)
      * @return slices (as multiples of 1152 and rest in last slice)
      * @throw Exception_PCM_Sample_Slicer
      */
     template<typename SampleType>
     const SlicedChannelContainer<SampleType> slice_PCMSamples(
             const ChannelContainer<SampleType>& samples,
-            const uint8_t buckets);
+            const uint8_t numBuckets);
 
+    /**
+     * combine a SlicedChannelContainer into a ChannelContainer
+     * @param scc
+     * @return 
+     */
     template<typename T>
     const ChannelContainer<T> combine_PCMSamples(
             const SlicedChannelContainer<T>& scc);
-    
+
     /**
      * check that all channels in ChannelContainer are of the same size
      * @param channelContainer
@@ -89,7 +94,7 @@ namespace encoder {
     template<typename SampleType>
     const bool checkChannelSampleSizeEqual(
             const ChannelContainer<SampleType>& channelContainer);
-    
+
 }//end namespace
 #endif /* PCM_SAMPLE_SPLITTING_H */
 
