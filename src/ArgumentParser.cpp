@@ -40,7 +40,7 @@ namespace encoder {
 
         void showWelcome() {
             std::cout << "Started wavToMp3 " << "\n"
-                    << "searching for files to encode " << "\n";
+                    << "searching for files to encode in " << "\n";
         }
     }
 

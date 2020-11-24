@@ -38,7 +38,7 @@ add_executable(${NAME}
     ${CMAKE_CURRENT_SOURCE_DIR}/../src/WriteFile.cpp
     FileEncodingTaskTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../src/FileEncodingTask.cpp
-
+    ArgumentParserTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../src/ArgumentParser.cpp
 )
 

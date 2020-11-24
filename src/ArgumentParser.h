@@ -32,6 +32,12 @@
 
 namespace encoder {
     
+    /**
+     * returns a vector with the Filenames that should be encoded
+     * @param argc
+     * @param argv
+     * @return 
+     */
     const std::vector< std::string > getFilesToEncode(int argc, char* argv[]);
 
 }//end namespace
