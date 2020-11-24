@@ -28,30 +28,50 @@
 #define FILESYSTEM_H
 
 #include <exception>
-#include <string>
 #include <vector>
-
-#include <stdint.h>
+#include <string>
 
 namespace encoder {
 
-    class FileSystemError : std::exception {
+    enum CodeExceptionFileSystem{
+        OPEN_DIRECTORY_FAILED = 10,
+        CLOSE_DIRECTORY_FAILED = 11,
+    };
+    
+    class ExceptionFileSystem : std::exception {
     public:
-        FileSystemError(const std::string& msg);
-        const std::string msg();
+        ExceptionFileSystem(const CodeExceptionFileSystem& msg);
+        const CodeExceptionFileSystem code();
     private:
-        const std::string errmsg;
+        const CodeExceptionFileSystem errmsg;
     };
 
-
+    /**
+     * check if given directory path exists
+     * @param folder
+     * @return true if path is a folder and exists
+     */
     const bool directoryExists(const std::string& folder);
 
+    /**
+     * get absolute Filenames of all Files in Folder
+     * @param folder
+     * @return std::vector<std::string> contianing the filnames in the folder
+     * @throws ExceptionFileSystem
+     */
     const std::vector<std::string> getFilesFrom(
             const std::string& folder);
 
+    /**
+     * get absolute Filesnames of all Files with specified file Extension
+     * @param folder
+     * @param fileExtension
+     * @return 
+     * @throws ExceptionFileSystem
+     */
     const std::vector<std::string> getFileTypeFrom(
             const std::string& folder,
-            const char* fileExtension);
+            const std::string& fileExtension);
 
 }//end namespace
 #endif /* FILESYSTEM_H */

@@ -26,21 +26,23 @@
 
 #include "FileSystem.h"
 
-#include  <string.h>
+#include  <cstring>
 #include <dirent.h>
 #include <ftw.h>
 
-#include <sstream>
-#include <fstream>
+#include <vector>
 #include <algorithm>
+#include <sstream>
+#include <iostream>
 
 namespace encoder {
 
-    FileSystemError::FileSystemError(const std::string& msg) : errmsg(msg) {
+    ExceptionFileSystem::ExceptionFileSystem(
+            const CodeExceptionFileSystem& msg) : errmsg(msg) {
 
     }
 
-    const std::string FileSystemError::msg() {
+    const CodeExceptionFileSystem ExceptionFileSystem::code() {
         return errmsg;
     }
 
@@ -51,7 +53,7 @@ namespace encoder {
             return false;
         }
         if (closedir(dirp) < 0) {
-            throw FileSystemError("closedir failed");
+            throw ExceptionFileSystem(CLOSE_DIRECTORY_FAILED);
         }
         return true;
     }
@@ -61,9 +63,7 @@ namespace encoder {
 
         DIR * dirp = opendir(folder.c_str());
         if (dirp == NULL) {
-            std::stringstream msg;
-            msg << "opendir failed" << folder;
-            throw FileSystemError(msg.str());
+            throw ExceptionFileSystem(OPEN_DIRECTORY_FAILED);
         }
 
         std::vector<std::string> files;
@@ -83,20 +83,33 @@ namespace encoder {
             }
         } while (dp != NULL);
         if (closedir(dirp) < 0) {
-            throw FileSystemError("closedir failed");
+            throw ExceptionFileSystem(CLOSE_DIRECTORY_FAILED);
         }
         return files;
     }
 
     const std::vector<std::string> getFileTypeFrom(
             const std::string& folder,
-            const char* fileExtension) {
+            const std::string& fileExtension) {
 
         auto files = getFilesFrom(folder);
+
         std::vector<std::string> filteredFiles;
         std::copy_if(files.begin(), files.end(), std::back_inserter(filteredFiles),
                 [fileExtension](std::string item) {
-                    return ((strncmp(strrchr(item.c_str(), '.') + 1, fileExtension, 4) == 0));
+                    auto pos = item.find_last_of(".");
+                    if (pos != item.npos) {
+                        std::stringstream ss;
+                        if (fileExtension.find(".") != fileExtension.npos) {
+                            ss << fileExtension;
+                        } else {
+                            ss << "." << fileExtension;
+                        }
+                        if (item.substr(pos, ss.str().length()).compare(ss.str()) == 0) {
+                            return true;
+                        }
+                    }
+                    return false;
                 });
         return filteredFiles;
     }

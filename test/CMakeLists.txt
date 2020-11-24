@@ -26,7 +26,7 @@ add_executable(${NAME}
     ${CMAKE_CURRENT_SOURCE_DIR}/../src/Parser.cpp
     EncoderTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../src/Encoder.cpp
-    FileStructureTest.cpp
+    FileSystemTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../src/FileSystem.cpp
     LameEncodingFileTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../src/LameEncoder.cpp
