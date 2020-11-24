@@ -52,7 +52,7 @@ namespace encoder {
 
     }
 
-    const ErrorCodeLameEncoding ExceptionLameEncoding::msg() {
+    const ErrorCodeLameEncoding ExceptionLameEncoding::code() {
         return errcode;
     }
 

@@ -45,7 +45,7 @@ namespace encoder {
 
     }
 
-    const CodeExceptionEncoder ExceptionEncoder::msg() {
+    const CodeExceptionEncoder ExceptionEncoder::code() {
         return errcode;
     }
 
@@ -72,16 +72,11 @@ namespace encoder {
             const WaveFmtHeader& fmt,
             const ChannelContainer<SampleType> & sampleBuffer) {
         std::vector<uint8_t> buffer;
-        try {
-            LameEncoder<SampleType> encoder;
-            encoder.setConfig(fmt, good);
-            buffer = encoder.encodePCMSamples(sampleBuffer);
-            auto flush = encoder.encode_flush(true);
-            buffer.insert(buffer.end(), flush.begin(), flush.end());
-        } catch (ExceptionLameEncoding exc) {
-            std::cout << "ExceptionLameEncoding " << exc.msg();
-            return {};
-        }
+        LameEncoder<SampleType> encoder;
+        encoder.setConfig(fmt, good);
+        buffer = encoder.encodePCMSamples(sampleBuffer);
+        auto flush = encoder.encode_flush(true);
+        buffer.insert(buffer.end(), flush.begin(), flush.end());
         return buffer;
     };
     template const std::vector<uint8_t> encodingTask(const WaveFmtHeader& fmt, const ChannelContainer<uint8_t> & sampleBuffer);

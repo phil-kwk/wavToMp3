@@ -68,7 +68,7 @@ namespace encoder {
     class ExceptionLameEncoding : std::exception {
     public:
         ExceptionLameEncoding(const ErrorCodeLameEncoding code);
-        const ErrorCodeLameEncoding msg();
+        const ErrorCodeLameEncoding code();
     private:
         const ErrorCodeLameEncoding errcode;
     };

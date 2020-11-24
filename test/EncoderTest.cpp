@@ -45,7 +45,7 @@ namespace encoder {
             WriteFile file("EncoderTest.TestEncodeSeriell.mp3");
             file.write(mp3Buffer);
         } catch (ExceptionEncoder err) {
-            FAIL() << err.msg();
+            FAIL() << err.code();
         }
     }
 
@@ -94,7 +94,7 @@ namespace encoder {
             std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
                     << " ms write File" << "\n";
         } catch (ExceptionEncoder err) {
-            FAIL() << err.msg();
+            FAIL() << err.code();
         }
     }
 
@@ -124,7 +124,7 @@ namespace encoder {
             std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
                     << " ms write File" << "\n";
         } catch (ExceptionEncoder err) {
-            FAIL() << err.msg();
+            FAIL() << err.code();
         }
     }
 }//end namespace

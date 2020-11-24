@@ -44,7 +44,7 @@ namespace encoder {
     class ExceptionEncoder : std::exception {
     public:
         ExceptionEncoder(const CodeExceptionEncoder code);
-        const CodeExceptionEncoder msg();
+        const CodeExceptionEncoder code();
     private:
         const CodeExceptionEncoder errcode;
     };

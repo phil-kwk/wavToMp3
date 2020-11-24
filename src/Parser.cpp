@@ -247,11 +247,16 @@ namespace encoder {
         handleWaveDataHEaderException(waveDataHeader);
         return waveDataHeader;
     }
+    
+    const std::size_t 
+    getSampleStartPosition(const std::vector<uint8_t>& buffer){
+        return getDataStartPosition(buffer) + RIFF_WAV_DATA_HEADER_LENGTH;
+    }
 
     void moveBufferToSamplePosition(std::vector<uint8_t>& buffer) {
         if (containsDataId) {
-            auto start = getDataStartPosition(buffer);
-            buffer.erase(buffer.begin(), buffer.begin() + start + RIFF_WAV_DATA_HEADER_LENGTH);
+            auto start = getSampleStartPosition(buffer);
+            buffer.erase(buffer.begin(), buffer.begin() + start);
         }
     }
 

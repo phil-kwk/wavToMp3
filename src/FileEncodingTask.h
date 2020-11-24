@@ -35,7 +35,7 @@ namespace encoder {
     /**
      * @hint start in new thread std::thread t(startFileEncoding, filename, pow(2,26), 4);//2^26 ~ 67 MB
      * @param filename
-     * @param preferred_memory_consumtion in Byte imprecise heap allocation preffered to be used by this function by the caller
+     * @param preferred_memory_consumtion in Byte imprecise heap allocation preffered to be used by this function by the caller please test the settings on your system it will need a min of ~7kBytes but more will allow faster and better encoding
      * @param numberThreads (if 0 then std thread hardware concurency value is used)
      */
     void startFileEncoding(const std::string filename, 

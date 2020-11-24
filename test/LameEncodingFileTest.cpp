@@ -32,7 +32,7 @@ namespace encoder {
             WriteFile file("LameEncodingFileTest.encodeWrite.mp3");
             file.write(mp3);
         } catch (ExceptionLameEncoding err) {
-            FAIL() << "ExceptionLameEncoding " << err.msg();
+            FAIL() << "ExceptionLameEncoding " << err.code();
         }catch (ExceptionWriteFile err) {
             FAIL() << "ExceptionWriteFile " << err.code();
         }

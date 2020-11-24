@@ -63,24 +63,52 @@ namespace encoder {
         ParseWAVFileErrorCodes errcode;
     };
 
-
+    /**
+     * try to Parse RIFF Header from Buffer
+     * @param buffer containing RIFF Header
+     * @return RiffHeader
+     * @throw ParseWAVFileError
+     */
     const RiffHeader
     get_RiffHeader(const std::vector<uint8_t>& buffer);
 
+    /**
+     * try to parse WaveFmtHeader from buffer
+     * @param buffer containing WaveFmtHeader
+     * @return WaveFmtHeader
+     * @throw ParseWAVFileError
+     */
     const WaveFmtHeader
     get_WaveFmtHeader(const std::vector<uint8_t>& buffer);
 
+    /**
+     * try to parse WaveDataHeader from Buffer
+     * @param buffer containing WaveDataHeader
+     * @return WaveDataHeader
+     * @throw ParseWAVFileError
+     */
     const WaveDataHeader
     get_WaveDataHeader(const std::vector<uint8_t>& buffer);
 
+    /**
+     * try to parse WAVE_Format from buffer
+     * @param buffer containing WAVE_Format
+     * @return WAVE_Format
+     * @throw ParseWAVFileError
+     */
     const WAVE_Format
     get_WaveFormat(const std::vector<uint8_t>& buffer);
-    
-    
+
+    //deprecated will be removed once Unit Tests updated
     void moveBufferToSamplePosition(std::vector<uint8_t>& buffer);
-    
-    const std::size_t
-    getDataStartPosition(const std::vector<uint8_t>& buffer);
+
+    /**
+     * getSampleStartPosition in Buffer
+     * @param buffer containing WaveDataHeader
+     * @return position
+     * @throws ParseWAVFileError
+     */
+    const std::size_t getSampleStartPosition(const std::vector<uint8_t>& buffer);
 
 }//end namespace
 #endif /* WAVFILEBUFFER_H */
