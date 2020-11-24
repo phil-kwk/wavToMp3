@@ -18,7 +18,7 @@ namespace encoder {
 
     namespace {
         const std::string fileName = "FileEncodingTaskTest.wav";
-        const std::string corruptFileName = "corrupt.wav";
+        
     }
 
     class FileEncodingTaskTest : public testing::Test {
@@ -30,13 +30,6 @@ namespace encoder {
         }
 
     };
-
-    void writeCorruptFile() {
-        std::vector<uint8_t> corruptBuffer;
-
-        WriteFile file(corruptFileName);
-        file.write(testfile_Buffer());
-    }
 
     TEST_F(FileEncodingTaskTest, startFileEncoding_DefaultParams) {
         startFileEncoding(fileName);
@@ -58,8 +51,55 @@ namespace encoder {
         startFileEncoding("t5wcnlawh9cval.wav");
     }
     
-    TEST_F(FileEncodingTaskTest, startFileEncoding_CorruptFile) {
+    TEST_F(FileEncodingTaskTest, startFileEncoding_CorruptFile_dataLengthToBig) {
+        const std::string corruptFileName = ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name();
+        std::vector<uint8_t> cB = testRiff_Buffer();
+        cB[40] = 200;//dataLength to big
+        WriteFile file(corruptFileName);
+        file.write(cB);
+        
+        startFileEncoding(corruptFileName);
+    }
+    
+    TEST_F(FileEncodingTaskTest, startFileEncoding_CorruptFile_dataAlignmentWrong) {
+        const std::string corruptFileName = ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name();
+        std::vector<uint8_t> cB = testRiff_Buffer();
+        cB[40] = 201;//not aligned with BlockAlignment
+        WriteFile file(corruptFileName);
+        file.write(cB);
+        
         startFileEncoding(corruptFileName);
     }
 
+    TEST_F(FileEncodingTaskTest, startFileEncoding_CorruptFile_UnevenFileLength1) {
+        const std::string corruptFileName = ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name();
+        std::vector<uint8_t> cB = testRiff_Buffer();
+        cB.push_back(0xaa);
+        WriteFile file(corruptFileName);
+        file.write(cB);
+        
+        startFileEncoding(corruptFileName);
+    }
+    
+    TEST_F(FileEncodingTaskTest, startFileEncoding_CorruptFile_UnevenFileLength3) {
+        const std::string corruptFileName = ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name();
+        std::vector<uint8_t> cB = testRiff_Buffer();
+        cB.push_back(0xaa);cB.push_back(0xaa);cB.push_back(0xaa);
+        WriteFile file(corruptFileName);
+        file.write(cB);
+        
+        startFileEncoding(corruptFileName);
+    }
+    
+    //here a Problem exists since it will emcode everything even after Data until entire fIle has been encoded
+    TEST_F(FileEncodingTaskTest, startFileEncoding_CorruptFile_ExtendedFileLength4) {
+        const std::string corruptFileName = ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name();
+        std::vector<uint8_t> cB = testRiff_Buffer();
+        cB.push_back(0xaa);cB.push_back(0xaa);cB.push_back(0xaa);cB.push_back(0xaa);
+        WriteFile file(corruptFileName);
+        file.write(cB);
+        
+        startFileEncoding(corruptFileName);
+    }
+    
 }//end namespace

@@ -53,6 +53,7 @@ namespace encoder {
         WAVE_FORMATTAG_NOT_SUPPORTED = 40,
 
         DATA_LENGTH_BIGGER_THAN_BUFFER = 50,
+        DATASIZE_NOTALIGNED_WITH_BLOCKSIZE = 51,
     };
 
     class ParseWAVFileError : std::exception {
@@ -109,6 +110,8 @@ namespace encoder {
      * @throws ParseWAVFileError
      */
     const std::size_t getSampleStartPosition(const std::vector<uint8_t>& buffer);
+    
+    const std::size_t getDataSampleSize(const WAVE_Format& wave);
 
 }//end namespace
 #endif /* WAVFILEBUFFER_H */

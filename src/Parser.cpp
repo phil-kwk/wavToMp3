@@ -259,5 +259,12 @@ namespace encoder {
             buffer.erase(buffer.begin(), buffer.begin() + start);
         }
     }
+    
+    const std::size_t getDataSampleSize(const WAVE_Format& wave){
+        if( wave.data.dataSize % wave.fmt.blockAlignment != 0){//data Size is missaligned
+            throw ParseWAVFileError(DATASIZE_NOTALIGNED_WITH_BLOCKSIZE);
+        }
+        return wave.data.dataSize / wave.fmt.blockAlignment;
+    }
 
 }//end namespace

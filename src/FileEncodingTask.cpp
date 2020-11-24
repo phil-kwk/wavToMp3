@@ -61,10 +61,10 @@ namespace encoder {
             return get_WaveFormat(buffer);
         }
 
-        const std::size_t getSampleSize(
+        const std::size_t getBufferSampleSize(
                 const WAVE_Format& wave,
                 const std::size_t bufferSize) {
-            return bufferSize / wave.fmt.blockAlignment;
+            return floor(bufferSize / wave.fmt.blockAlignment);
         }
 
         const bool using_uint8Samples(const WaveFmtHeader& fmt) {
@@ -107,7 +107,49 @@ namespace encoder {
         }
     }
 
-    void startFileEncoding(const std::string filename,
+    void stepByStepEncoding(const std::string& filename,
+            const std::size_t preferred_memory_consumtion,
+            const WAVE_Format& wave,
+            const std::size_t sampleStartPos,
+            const std::size_t numThreads) {
+
+        WriteFile wfile(getOutputFileName(filename));
+        const std::size_t DATA_SAMPLESIZE = getDataSampleSize(wave);
+        const std::size_t BYTES_READ_FROM_FILE = getBytesToReadFromFile(preferred_memory_consumtion);
+
+        ReadFile read(filename);
+        read.next(sampleStartPos);
+
+        std::vector<uint8_t> sampleBuffer;
+        std::size_t samplesEncoded = 0;
+        do {
+            std::vector<uint8_t> mp3Frames;
+            sampleBuffer = read.next(BYTES_READ_FROM_FILE);
+            const std::size_t bufferSampleSize = getBufferSampleSize(wave, sampleBuffer.size());
+            const std::size_t numChannels = wave.fmt.channels;
+            const WaveFmtHeader fmt = wave.fmt;
+
+            if (using_int16Samples(fmt)) {
+                auto pcm = get_pcm_Samples<int16_t>(sampleBuffer, bufferSampleSize, numChannels);
+                mp3Frames = wavToMp3Concurrently(fmt, pcm, numThreads);
+            } else if (using_int32Samples(fmt)) {
+                auto pcm = get_pcm_Samples<int32_t>(sampleBuffer, bufferSampleSize, numChannels);
+                mp3Frames = wavToMp3Concurrently(fmt, pcm, numThreads);
+            } else if (using_uint8Samples(fmt)) {
+                auto pcm = get_pcm_Samples<uint8_t>(sampleBuffer, bufferSampleSize, numChannels);
+                mp3Frames = wavToMp3Concurrently(fmt, pcm, numThreads);
+            } else {
+                return; //Sample Typ currently not supported
+            }
+            samplesEncoded += bufferSampleSize;
+            wfile.write(mp3Frames);
+        } while (sampleBuffer.size() == BYTES_READ_FROM_FILE &&
+                samplesEncoded < DATA_SAMPLESIZE);
+        
+        std::cout << " done " << samplesEncoded << "/" << DATA_SAMPLESIZE << " Samples encoded" << "\n";
+    }
+
+    void startFileEncoding(const std::string& filename,
             const std::size_t preferred_memory_consumtion,
             const std::size_t numberThreads) {
 
@@ -118,35 +160,15 @@ namespace encoder {
 
             wave = get_WaveFormat(buffer);
 
-
+            std::cout << getOutputFileName(filename);
             if (!checkSampleFormat(wave.fmt)) {
+                std::cout << " SampleFormat Not Supported" << "\n";
                 return;
             }
 
-            std::cout << getOutputFileName(filename);
-            read.next(getSampleStartPosition(buffer));
+            const std::size_t sampleStartPos = getSampleStartPosition(buffer);
 
-            const std::size_t BYTES_READ_FROM_FILE = getBytesToReadFromFile(preferred_memory_consumtion);
-
-            WriteFile wfile(getOutputFileName(filename));
-            std::vector<uint8_t> mp3Frames;
-            do {
-                buffer = read.next(BYTES_READ_FROM_FILE);
-                if (using_int16Samples(wave.fmt)) {
-                    auto pcm = get_pcm_Samples<int16_t>(buffer, getSampleSize(wave, buffer.size()), wave.fmt.channels);
-                    mp3Frames = wavToMp3Concurrently(wave.fmt, pcm, numberThreads);
-                } else if (using_int32Samples(wave.fmt)) {
-                    auto pcm = get_pcm_Samples<int32_t>(buffer, getSampleSize(wave, buffer.size()), wave.fmt.channels);
-                    mp3Frames = wavToMp3Concurrently(wave.fmt, pcm, numberThreads);
-                } else if (using_uint8Samples(wave.fmt)) {
-                    auto pcm = get_pcm_Samples<uint8_t>(buffer, getSampleSize(wave, buffer.size()), wave.fmt.channels);
-                    mp3Frames = wavToMp3Concurrently(wave.fmt, pcm, numberThreads);
-                } else {
-                    return; //Sample Typ currently not supported
-                }
-                wfile.write(mp3Frames);
-            } while (buffer.size() == BYTES_READ_FROM_FILE);
-            std::cout << " done" << "\n";
+            stepByStepEncoding(filename, preferred_memory_consumtion, wave, sampleStartPos, numberThreads);
 
         } catch (ExceptionWriteFile exc) {//if anything goes wrong encoding will fail and we output error Msg
             std::cout << filename << " ExceptionWriteFile " << exc.code() << "\n";
