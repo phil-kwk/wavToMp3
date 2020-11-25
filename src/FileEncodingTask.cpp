@@ -82,6 +82,14 @@ namespace encoder {
             }
             return false;
         }
+        
+        const bool using_int24Samples(const WaveFmtHeader& fmt) {
+            if ((fmt.blockAlignment / fmt.channels) == 3 &&
+                    fmt.formatTag == WAVE_FORMAT_PCM) {
+                return true;
+            }
+            return false;
+        }
 
         const bool using_int32Samples(const WaveFmtHeader& fmt) {
             if ((fmt.blockAlignment / fmt.channels) == 4 &&
@@ -111,6 +119,8 @@ namespace encoder {
             if (using_int32Samples(fmt)) {
                 return true;
             } else if (using_int16Samples(fmt)) {
+                return true;
+            } else if (using_int24Samples(fmt)) {
                 return true;
             } else if (using_uint8Samples(fmt)) {
                 return true;
@@ -157,7 +167,10 @@ namespace encoder {
             } else if (using_uint8Samples(fmt)) {
                 auto pcm = get_pcm_Samples<uint8_t>(sampleBuffer, bufferSampleSize, numChannels);
                 mp3Frames = wavToMp3Concurrently(fmt, pcm, numThreads);
-            } else {
+            } else if (using_int24Samples(fmt)) {
+                auto pcm = get_pcm_Samples<int24_t>(sampleBuffer, bufferSampleSize, numChannels);
+                mp3Frames = wavToMp3Concurrently<int24_t>(fmt, pcm, numThreads);
+            }else {
                 return; //Sample Typ currently not supported
             }
             samplesEncoded += bufferSampleSize;

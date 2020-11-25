@@ -64,6 +64,7 @@ namespace encoder {
     }
     template LameEncoder<uint8_t>::LameEncoder();
     template LameEncoder<int16_t>::LameEncoder();
+    template LameEncoder<int24_t>::LameEncoder();
     template LameEncoder<int32_t>::LameEncoder();
 
     template<typename T>
@@ -72,6 +73,7 @@ namespace encoder {
     }
     template LameEncoder<uint8_t>::~LameEncoder();
     template LameEncoder<int16_t>::~LameEncoder();
+    template LameEncoder<int24_t>::~LameEncoder();
     template LameEncoder<int32_t>::~LameEncoder();
 
     void encodeResultHandler(int ret) {
@@ -166,6 +168,42 @@ namespace encoder {
 
     template<>
     const std::vector<uint8_t>
+    LameEncoder<int24_t>::encodePCMSamples(
+            const ChannelContainer<int24_t>& samples) {
+
+        const std::size_t numberOfSamples = samples.at(0).size();
+        const std::size_t numberChannels = samples.size();
+        const std::size_t mp3BufferSizeMax = 1.25 * numberOfSamples + 7200;
+
+        std::vector<uint8_t> mp3Buffer;
+        mp3Buffer.resize(mp3BufferSizeMax); //resize is used because lame_encode_buffer will access by &[]
+
+        int ret = 0;
+        if (numberChannels == 2) {
+            ret = lame_encode_buffer_int(lgf,
+                    &samples.at(0)[0].data,
+                    &samples.at(1)[0].data,
+                    numberOfSamples,
+                    &mp3Buffer[0],
+                    mp3Buffer.size());
+        } else if (numberChannels == 1) {
+            ret = lame_encode_buffer_int(lgf,
+                    &samples.at(0)[0].data,
+                    &samples.at(0)[0].data,
+                    numberOfSamples,
+                    &mp3Buffer[0],
+                    mp3Buffer.size());
+        } else {
+            throw ExceptionLameEncoding(NUMBER_CHANNELS_NOT_SUPOORTED);
+        }
+
+        encodeResultHandler(ret);
+        mp3Buffer.resize(ret); //MP3 Buffer will be resized to the number of mp3 Bytes actually encoded
+        return mp3Buffer;
+    }
+    
+    template<>
+    const std::vector<uint8_t>
     LameEncoder<int32_t>::encodePCMSamples(
             const ChannelContainer<int32_t>& samples) {
 
@@ -199,7 +237,7 @@ namespace encoder {
         mp3Buffer.resize(ret); //MP3 Buffer will be resized to the number of mp3 Bytes actually encoded
         return mp3Buffer;
     }
-
+    
     template<typename T>
     const std::vector<uint8_t>
     LameEncoder<T>::encode_flush(const bool noGap) {
@@ -221,6 +259,7 @@ namespace encoder {
     }
     template const std::vector<uint8_t> LameEncoder<uint8_t>::encode_flush(const bool noGap);
     template const std::vector<uint8_t> LameEncoder<int16_t>::encode_flush(const bool noGap);
+    template const std::vector<uint8_t> LameEncoder<int24_t>::encode_flush(const bool noGap);
     template const std::vector<uint8_t> LameEncoder<int32_t>::encode_flush(const bool noGap);
 
     template<typename T>
@@ -251,6 +290,7 @@ namespace encoder {
     }
     template void LameEncoder<uint8_t>::setConfig(const WaveFmtHeader conf, const LameEncodingQuality quality);
     template void LameEncoder<int16_t>::setConfig(const WaveFmtHeader conf, const LameEncodingQuality quality);
+    template void LameEncoder<int24_t>::setConfig(const WaveFmtHeader conf, const LameEncodingQuality quality);
     template void LameEncoder<int32_t>::setConfig(const WaveFmtHeader conf, const LameEncodingQuality quality);
 
 }//end namespace

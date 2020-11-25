@@ -33,6 +33,10 @@
 
 namespace encoder {
 
+    struct int24_t {
+        int32_t data;//using int32 since it will be interpreted as if int32 data by encoder
+    };
+
     template<typename SampleType>
     using Channel = std::vector<SampleType>; //{1,2,3,4,...}
 
