@@ -191,24 +191,28 @@ namespace encoder {
         std::cout << " done " << samplesEncoded << "/" << DATA_SAMPLESIZE << " Samples encoded" << "\n";
     }
 
+    std::tuple<const WAVE_Format, const std::size_t>
+    readParseWaveFormat(const std::string& filename) {
+        ReadFile read(filename);
+        auto buffer = read.peek(BYTES_PEEK_INTO_FILE);
+        return {get_WaveFormat(buffer), getSampleStartPosition(buffer)};
+    }
+
     void startFileEncoding(const std::string& filename,
             const std::size_t preferred_memory_consumtion,
             const std::size_t numberThreads) {
 
         try {
-            ReadFile read(filename);
-            auto buffer = read.peek(BYTES_PEEK_INTO_FILE);
-            WAVE_Format wave;
 
-            wave = get_WaveFormat(buffer);
-
+            auto ret = readParseWaveFormat(filename);
+            auto wave = std::get<0>(ret);
+            auto sampleStartPos = std::get<1>(ret);
+            
             std::cout << getOutputFileName(filename);
             if (!checkSampleFormat(wave.fmt)) {
                 std::cout << " SampleFormat Not Supported" << "\n";
                 return;
             }
-
-            const std::size_t sampleStartPos = getSampleStartPosition(buffer);
 
             stepByStepEncoding(filename, preferred_memory_consumtion, wave, sampleStartPos, numberThreads);
 
