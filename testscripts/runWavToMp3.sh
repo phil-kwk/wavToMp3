@@ -19,3 +19,7 @@ find . -type f \( -name '*mp3' \) -delete
 ./$execPath ///
 
 ./$execPath . ../../../
+
+
+#delete artefacts afterwards
+find . -type f -not \( -name '*sh' \) -delete

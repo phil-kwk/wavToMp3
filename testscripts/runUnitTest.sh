@@ -11,3 +11,6 @@ find . -type f -not \( -name '*sh' \) -delete
 execPath=/../build/test/wavToMp3UnitTests
 
 .$execPath
+
+#delete artefacts afterwards
+find . -type f -not \( -name '*sh' \) -delete
