@@ -3,7 +3,7 @@ Demo Project for Multithreaded encoding of WAV to MP3 written in c++11 using LAM
 
 * see INSTALL file for information on how to build the Project
 
-The wavToMp3 encoder is currently capable of encoding RAW PCM mono, stereo signals with a sample size of (uint8, int16, int32) more Sample Sizes can be easily added.
+The wavToMp3 encoder is currently capable of encoding RAW PCM mono, stereo signals with a sample size of (uint8, int16, int24, int32, IEEE float32, IEEE float64) more Sample Sizes can be easily added.
 
 The wavToMp3 encoder takes Directory Paths as arguments and try's to encode all wav Files in the directory to mp3
 
