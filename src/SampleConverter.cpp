@@ -217,7 +217,7 @@ namespace encoder {
             const std::size_t numberOfSamples,
             const std::size_t numberChannels) {
 
-        const std::size_t sizeof_uint8 = 1;
+        const std::size_t sizeof_uint8 = UINT8_SIZE;
 
         if (buffer.size() < numberOfSamples * sizeof_uint8 * numberChannels) {
             throw ExceptionConverter(BUFFER_SIZE_TOSMALL_FOR_NUMBEROFSAMPLES);
@@ -249,7 +249,7 @@ namespace encoder {
             const std::size_t numberOfSamples,
             const std::size_t numberChannels) {
 
-        const std::size_t sizeof_int24 = 3;
+        const std::size_t sizeof_int24 = INT24_SIZE;
 
         if (buffer.size() < numberOfSamples * sizeof_int24 * numberChannels) {
             throw ExceptionConverter(BUFFER_SIZE_TOSMALL_FOR_NUMBEROFSAMPLES);
