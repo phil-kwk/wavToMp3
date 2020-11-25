@@ -6,6 +6,8 @@
 # Created on 23.11.2020, 10:03:30
 #
 
+find . -type f -not \( -name '*sh' \) -delete
+
 execPath=/../build/test/wavToMp3UnitTests
 
 .$execPath

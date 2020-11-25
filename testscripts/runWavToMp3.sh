@@ -5,11 +5,17 @@
 #
 # Created on 23.11.2020, 10:04:13
 #
+execPath=../build/src/wavToMp3
 
-execPath=/../build/src/wavToMp3
+#delete all files but shell scripts
+find . -type f \( -name '*mp3' \) -delete
 
-#No Arguments
-.$execPath .
+./$execPath
 
-#Search for wav Files in test folder
-.$execPath /mnt/c/wavToMp3encoder/testfiles/
+./$execPath .
+
+./$execPath //
+
+./$execPath ///
+
+./$execPath . ../../../

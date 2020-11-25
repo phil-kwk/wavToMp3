@@ -8,12 +8,12 @@
 
 execPath=/../build/src/wavToMp3
 
+#delete all files but shellscripts
+find . -type f -not \( -name '*sh' \) -delete
+
 #valgrind --tool=memcheck --leak-check=yes .$execPath
 
 #valgrind --tool=memcheck --leak-check=yes .$execPath ../testfiles/
-
-#delete old massif.out.*
-echo y | find -name "massif.out.*" -exec rm -i {} \;
 
 valgrind --tool=massif .$execPath
 ms_print massif.out.*
