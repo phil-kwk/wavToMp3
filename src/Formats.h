@@ -32,6 +32,14 @@
 #include <vector>
 
 namespace encoder {
+    
+    struct float32 {
+        uint8_t data[4];
+    };
+    
+    struct float64 {
+        uint8_t data[8];
+    };
 
     struct int24_t {
         int32_t data;//using int32 since it will be interpreted as if int32 data by encoder

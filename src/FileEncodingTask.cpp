@@ -124,6 +124,10 @@ namespace encoder {
                 return true;
             } else if (using_uint8Samples(fmt)) {
                 return true;
+            }else if (using_float32Samples(fmt)) {
+                return true;
+            }else if (using_float64Samples(fmt)) {
+                return true;
             }
             return false;
         }
@@ -169,7 +173,13 @@ namespace encoder {
                 mp3Frames = wavToMp3Concurrently(fmt, pcm, numThreads);
             } else if (using_int24Samples(fmt)) {
                 auto pcm = get_pcm_Samples<int24_t>(sampleBuffer, bufferSampleSize, numChannels);
-                mp3Frames = wavToMp3Concurrently<int24_t>(fmt, pcm, numThreads);
+                mp3Frames = wavToMp3Concurrently(fmt, pcm, numThreads);
+            }else if (using_float32Samples(fmt)) {
+                auto pcm = get_pcm_Samples<float32>(sampleBuffer, bufferSampleSize, numChannels);
+                mp3Frames = wavToMp3Concurrently(fmt, pcm, numThreads);
+            }else if (using_float64Samples(fmt)) {
+                auto pcm = get_pcm_Samples<float64>(sampleBuffer, bufferSampleSize, numChannels);
+                mp3Frames = wavToMp3Concurrently(fmt, pcm, numThreads);
             }else {
                 return; //Sample Typ currently not supported
             }
