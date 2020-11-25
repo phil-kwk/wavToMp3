@@ -33,6 +33,10 @@
 
 namespace encoder {
     
+    struct uint8 {
+        int16_t data;//using int16 since encoder expects int16 format
+    };
+    
     struct float32 {
         uint8_t data[4];
     };
@@ -41,8 +45,8 @@ namespace encoder {
         uint8_t data[8];
     };
 
-    struct int24_t {
-        int32_t data;//using int32 since it will be interpreted as if int32 data by encoder
+    struct int24 {
+        int32_t data;//using int32 since encoder expects int32 format
     };
 
     template<typename SampleType>

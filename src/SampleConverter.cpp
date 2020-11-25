@@ -29,6 +29,7 @@
 #include <cmath>
 #include <algorithm>
 #include <iostream>
+#include <cstring>
 
 namespace encoder {
 
@@ -117,10 +118,16 @@ namespace encoder {
                 const std::size_t position);
 
         template<>
-        const uint8_t get_SampleValue<uint8_t>(
+        const uint8 get_SampleValue<uint8>(
                 const std::vector<uint8_t>& buffer,
                 const std::size_t position) {
-            return buffer.at(position);
+            uint8_t uv = buffer.at(position);
+            int8_t sv;
+            memcpy(&sv, &uv, sizeof(uv));
+            
+            uint8 val;
+            val.data = sv * 256;
+            return val;
         }
 
         template<>
@@ -131,10 +138,10 @@ namespace encoder {
         }
 
         template<>
-        const int24_t get_SampleValue<int24_t>(
+        const int24 get_SampleValue<int24>(
                 const std::vector<uint8_t>& buffer,
                 const std::size_t position) {
-            int24_t val;
+            int24 val;
             val.data = (int32_t(buffer.at(position + 2) << 16) | int32_t(buffer.at(position + 1) << 8) | int32_t(buffer.at(position))) * 256;
             return val;
         }
@@ -199,25 +206,24 @@ namespace encoder {
         }
         return cspcm;
     }
-    template const ChannelContainer<uint8_t> get_pcm_Samples<uint8_t>(const std::vector<uint8_t>& samples, const std::size_t numberOfSamples, const std::size_t numberChannels);
     template const ChannelContainer<int16_t> get_pcm_Samples<int16_t>(const std::vector<uint8_t>& samples, const std::size_t numberOfSamples, const std::size_t numberChannels);
     template const ChannelContainer<int32_t> get_pcm_Samples<int32_t>(const std::vector<uint8_t>& samples, const std::size_t numberOfSamples, const std::size_t numberChannels);
     template const ChannelContainer<float32> get_pcm_Samples<float32>(const std::vector<uint8_t>& samples, const std::size_t numberOfSamples, const std::size_t numberChannels);
     template const ChannelContainer<float64> get_pcm_Samples<float64>(const std::vector<uint8_t>& samples, const std::size_t numberOfSamples, const std::size_t numberChannels);
 
     template<>
-    const ChannelContainer<int24_t> get_pcm_Samples<int24_t> (
+    const ChannelContainer<uint8> get_pcm_Samples<uint8> (
             const std::vector<uint8_t>& buffer,
             const std::size_t numberOfSamples,
             const std::size_t numberChannels) {
 
-        const std::size_t sizeof_int24_t = 3;
+        const std::size_t sizeof_uint8 = 1;
 
-        if (buffer.size() < numberOfSamples * sizeof_int24_t * numberChannels) {
+        if (buffer.size() < numberOfSamples * sizeof_uint8 * numberChannels) {
             throw ExceptionConverter(BUFFER_SIZE_TOSMALL_FOR_NUMBEROFSAMPLES);
         }
 
-        ChannelContainer<int24_t> cspcm;
+        ChannelContainer<uint8> cspcm;
         if (numberOfSamples == 0 ||
                 buffer.size() == 0 ||
                 numberChannels == 0) {
@@ -225,11 +231,43 @@ namespace encoder {
         }
 
         for (std::size_t c = 0; c < numberChannels; c++) {
-            std::vector<int24_t> channel;
+            std::vector<uint8> channel;
             for (std::size_t pos = 0;
-                    pos < (numberOfSamples * sizeof_int24_t * numberChannels);
-                    pos = pos + sizeof_int24_t * numberChannels) {
-                auto value = get_SampleValue<int24_t>(buffer, pos + c * sizeof_int24_t);
+                    pos < (numberOfSamples * sizeof_uint8 * numberChannels);
+                    pos = pos + sizeof_uint8 * numberChannels) {
+                auto value = get_SampleValue<uint8>(buffer, pos + c * sizeof_uint8);
+                channel.push_back(value);
+            }
+            cspcm.push_back(channel);
+        }
+        return cspcm;
+    }
+    
+    template<>
+    const ChannelContainer<int24> get_pcm_Samples<int24> (
+            const std::vector<uint8_t>& buffer,
+            const std::size_t numberOfSamples,
+            const std::size_t numberChannels) {
+
+        const std::size_t sizeof_int24 = 3;
+
+        if (buffer.size() < numberOfSamples * sizeof_int24 * numberChannels) {
+            throw ExceptionConverter(BUFFER_SIZE_TOSMALL_FOR_NUMBEROFSAMPLES);
+        }
+
+        ChannelContainer<int24> cspcm;
+        if (numberOfSamples == 0 ||
+                buffer.size() == 0 ||
+                numberChannels == 0) {
+            return cspcm;
+        }
+
+        for (std::size_t c = 0; c < numberChannels; c++) {
+            std::vector<int24> channel;
+            for (std::size_t pos = 0;
+                    pos < (numberOfSamples * sizeof_int24 * numberChannels);
+                    pos = pos + sizeof_int24 * numberChannels) {
+                auto value = get_SampleValue<int24>(buffer, pos + c * sizeof_int24);
                 channel.push_back(value);
             }
             cspcm.push_back(channel);
@@ -252,9 +290,9 @@ namespace encoder {
         }
         return false;
     }
-    template const bool checkChannelSampleSizeEqual(const ChannelContainer<uint8_t>& channelContainer);
+    template const bool checkChannelSampleSizeEqual(const ChannelContainer<uint8>& channelContainer);
     template const bool checkChannelSampleSizeEqual(const ChannelContainer<int16_t>& channelContainer);
-    template const bool checkChannelSampleSizeEqual(const ChannelContainer<int24_t>& channelContainer);
+    template const bool checkChannelSampleSizeEqual(const ChannelContainer<int24>& channelContainer);
     template const bool checkChannelSampleSizeEqual(const ChannelContainer<int32_t>& channelContainer);
     template const bool checkChannelSampleSizeEqual(const ChannelContainer<float32>& channelContainer);
     template const bool checkChannelSampleSizeEqual(const ChannelContainer<float64>& channelContainer);
@@ -298,9 +336,9 @@ namespace encoder {
         scc.resize(numberSlices); //
         return scc;
     }
-    template const std::vector<ChannelContainer<uint8_t>> slice_PCMSamples <uint8_t>(const ChannelContainer<uint8_t>& samples, const uint8_t buckets);
+    template const std::vector<ChannelContainer<uint8>> slice_PCMSamples <uint8>(const ChannelContainer<uint8>& samples, const uint8_t buckets);
     template const std::vector<ChannelContainer<int16_t>> slice_PCMSamples <int16_t>(const ChannelContainer<int16_t>& samples, const uint8_t buckets);
-    template const std::vector<ChannelContainer<int24_t>> slice_PCMSamples <int24_t>(const ChannelContainer<int24_t>& samples, const uint8_t buckets);
+    template const std::vector<ChannelContainer<int24>> slice_PCMSamples <int24>(const ChannelContainer<int24>& samples, const uint8_t buckets);
     template const std::vector<ChannelContainer<int32_t>> slice_PCMSamples <int32_t>(const ChannelContainer<int32_t>& samples, const uint8_t buckets);
     template const std::vector<ChannelContainer<float32>> slice_PCMSamples <float32>(const ChannelContainer<float32>& samples, const uint8_t buckets);
     template const std::vector<ChannelContainer<float64>> slice_PCMSamples <float64>(const ChannelContainer<float64>& samples, const uint8_t buckets);
@@ -325,9 +363,9 @@ namespace encoder {
         }
         return buffer;
     }
-    template const ChannelContainer<uint8_t> combine_PCMSamples<uint8_t> (const SlicedChannelContainer<uint8_t>& scc);
+    template const ChannelContainer<uint8> combine_PCMSamples<uint8> (const SlicedChannelContainer<uint8>& scc);
     template const ChannelContainer<int16_t> combine_PCMSamples<int16_t> (const SlicedChannelContainer<int16_t>& scc);
-    template const ChannelContainer<int24_t> combine_PCMSamples<int24_t> (const SlicedChannelContainer<int24_t>& scc);
+    template const ChannelContainer<int24> combine_PCMSamples<int24> (const SlicedChannelContainer<int24>& scc);
     template const ChannelContainer<int32_t> combine_PCMSamples<int32_t> (const SlicedChannelContainer<int32_t>& scc);
     template const ChannelContainer<float32> combine_PCMSamples<float32> (const SlicedChannelContainer<float32>& scc);
     template const ChannelContainer<float64> combine_PCMSamples<float64> (const SlicedChannelContainer<float64>& scc);

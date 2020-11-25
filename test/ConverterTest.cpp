@@ -21,7 +21,7 @@ namespace encoder {
     };
 
     TEST_F(ConverterTest, call_get_pcm_Samples_uint8__Empty) {
-        auto buffer = get_pcm_Samples<uint8_t>({}, 0, 2);
+        auto buffer = get_pcm_Samples<uint8>({}, 0, 2);
         EXPECT_EQ(0, buffer.size());
     }
 
@@ -52,7 +52,7 @@ namespace encoder {
 
     TEST_F(ConverterTest, call_get_pcm_Samples_uint8_errorBufferSize1) {
         try {
-            get_pcm_Samples<uint8_t>({}, 1, 2);
+            get_pcm_Samples<uint8>({}, 1, 2);
             FAIL();
         } catch (ExceptionConverter exc) {
             EXPECT_EQ(BUFFER_SIZE_TOSMALL_FOR_NUMBEROFSAMPLES, exc.code());
@@ -79,7 +79,7 @@ namespace encoder {
 
     TEST_F(ConverterTest, call_get_pcm_Samples_uint8_errorBufferSize2) {
         try {
-            get_pcm_Samples<uint8_t>({1}, 1, 2);
+            get_pcm_Samples<uint8>({1}, 1, 2);
             FAIL();
         } catch (ExceptionConverter exc) {
             EXPECT_EQ(BUFFER_SIZE_TOSMALL_FOR_NUMBEROFSAMPLES, exc.code());
@@ -105,8 +105,8 @@ namespace encoder {
     }
 
     TEST_F(ConverterTest, call_slice_PCMSamples_uint8) {
-        ChannelContainer<uint8_t> sample;
-        auto slices = slice_PCMSamples<uint8_t>(sample, 0);
+        ChannelContainer<uint8> sample;
+        auto slices = slice_PCMSamples<uint8>(sample, 0);
         EXPECT_EQ(0, slices.size());
     }
 
@@ -123,14 +123,14 @@ namespace encoder {
     }
 
     TEST_F(ConverterTest, call_slice_PCMSamples_oneSample_uint8) {
-        ChannelContainer<uint8_t> container{
-            {1, 2, 3, 4},
-            {5, 6, 7, 8},
-            {9, 10, 11, UINT8_MAX}};
+        ChannelContainer<uint8> container{
+            {{1}, {2}, {3}, {4}},
+            {{5}, {6}, {7}, {8}},
+            {{9}, {10}, {11}, {UINT8_MAX}}};
 
-        std::vector<ChannelContainer < uint8_t>> scc =
-                slice_PCMSamples<uint8_t>(container, 1);
-        EXPECT_EQ(scc.at(0), container);
+        std::vector<ChannelContainer < uint8>> scc =
+                slice_PCMSamples<uint8>(container, 1);
+        EXPECT_EQ(scc.at(0).size(), container.size());
     }
 
     TEST_F(ConverterTest, call_slice_PCMSamples_oneSample_int16) {

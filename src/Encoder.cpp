@@ -63,9 +63,9 @@ namespace encoder {
         mp3Buffer.insert(mp3Buffer.end(), flushBuffer.begin(), flushBuffer.end());
         return mp3Buffer;
     }
-    template const std::vector<uint8_t> wavToMp3Seriell(const WaveFmtHeader& fmt, const ChannelContainer<uint8_t> samples);
+    template const std::vector<uint8_t> wavToMp3Seriell(const WaveFmtHeader& fmt, const ChannelContainer<uint8> samples);
     template const std::vector<uint8_t> wavToMp3Seriell(const WaveFmtHeader& fmt, const ChannelContainer<int16_t> samples);
-    template const std::vector<uint8_t> wavToMp3Seriell(const WaveFmtHeader& fmt, const ChannelContainer<int24_t> samples);
+    template const std::vector<uint8_t> wavToMp3Seriell(const WaveFmtHeader& fmt, const ChannelContainer<int24> samples);
     template const std::vector<uint8_t> wavToMp3Seriell(const WaveFmtHeader& fmt, const ChannelContainer<int32_t> samples);
     template const std::vector<uint8_t> wavToMp3Seriell(const WaveFmtHeader& fmt, const ChannelContainer<float32> samples);
     template const std::vector<uint8_t> wavToMp3Seriell(const WaveFmtHeader& fmt, const ChannelContainer<float64> samples);
@@ -82,9 +82,9 @@ namespace encoder {
         buffer.insert(buffer.end(), flush.begin(), flush.end());
         return buffer;
     };
-    template const std::vector<uint8_t> encodingTask(const WaveFmtHeader& fmt, const ChannelContainer<uint8_t> & sampleBuffer);
+    template const std::vector<uint8_t> encodingTask(const WaveFmtHeader& fmt, const ChannelContainer<uint8> & sampleBuffer);
     template const std::vector<uint8_t> encodingTask(const WaveFmtHeader& fmt, const ChannelContainer<int16_t> & sampleBuffer);
-    template const std::vector<uint8_t> encodingTask(const WaveFmtHeader& fmt, const ChannelContainer<int24_t> & sampleBuffer);
+    template const std::vector<uint8_t> encodingTask(const WaveFmtHeader& fmt, const ChannelContainer<int24> & sampleBuffer);
     template const std::vector<uint8_t> encodingTask(const WaveFmtHeader& fmt, const ChannelContainer<int32_t> & sampleBuffer);
     template const std::vector<uint8_t> encodingTask(const WaveFmtHeader& fmt, const ChannelContainer<float32> & sampleBuffer);
     template const std::vector<uint8_t> encodingTask(const WaveFmtHeader& fmt, const ChannelContainer<float64> & sampleBuffer);
@@ -113,9 +113,9 @@ namespace encoder {
         }
         return mp3Buffer;
     }
-    template const std::vector<uint8_t> wavToMp3Concurrently(const WaveFmtHeader& fmt, const ChannelContainer<uint8_t> samples, unsigned int numThreads);
+    template const std::vector<uint8_t> wavToMp3Concurrently(const WaveFmtHeader& fmt, const ChannelContainer<uint8> samples, unsigned int numThreads);
     template const std::vector<uint8_t> wavToMp3Concurrently(const WaveFmtHeader& fmt, const ChannelContainer<int16_t> samples, unsigned int numThreads);
-    template const std::vector<uint8_t> wavToMp3Concurrently(const WaveFmtHeader& fmt, const ChannelContainer<int24_t> samples, unsigned int numThreads);
+    template const std::vector<uint8_t> wavToMp3Concurrently(const WaveFmtHeader& fmt, const ChannelContainer<int24> samples, unsigned int numThreads);
     template const std::vector<uint8_t> wavToMp3Concurrently(const WaveFmtHeader& fmt, const ChannelContainer<int32_t> samples, unsigned int numThreads);
     template const std::vector<uint8_t> wavToMp3Concurrently(const WaveFmtHeader& fmt, const ChannelContainer<float32> samples, unsigned int numThreads);
     template const std::vector<uint8_t> wavToMp3Concurrently(const WaveFmtHeader& fmt, const ChannelContainer<float64> samples, unsigned int numThreads);
