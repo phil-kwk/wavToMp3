@@ -68,21 +68,40 @@ namespace encoder {
         }
 
         const bool using_uint8Samples(const WaveFmtHeader& fmt) {
-            if ((fmt.blockAlignment / fmt.channels) == 1) {
+            if ((fmt.blockAlignment / fmt.channels) == 1 &&
+                    fmt.formatTag == WAVE_FORMAT_PCM) {
                 return true;
             }
             return false;
         }
 
         const bool using_int16Samples(const WaveFmtHeader& fmt) {
-            if ((fmt.blockAlignment / fmt.channels) == 2) {
+            if ((fmt.blockAlignment / fmt.channels) == 2 &&
+                    fmt.formatTag == WAVE_FORMAT_PCM) {
                 return true;
             }
             return false;
         }
 
         const bool using_int32Samples(const WaveFmtHeader& fmt) {
-            if ((fmt.blockAlignment / fmt.channels) == 4) {
+            if ((fmt.blockAlignment / fmt.channels) == 4 &&
+                    fmt.formatTag == WAVE_FORMAT_PCM) {
+                return true;
+            }
+            return false;
+        }
+
+        const bool using_float32Samples(const WaveFmtHeader& fmt) {
+            if ((fmt.blockAlignment / fmt.channels) == 4 &&
+                    fmt.formatTag == WAVE_FORMAT_IEEE_FLOAT) {
+                return true;
+            }
+            return false;
+        }
+        
+        const bool using_float64Samples(const WaveFmtHeader& fmt) {
+            if ((fmt.blockAlignment / fmt.channels) == 8 &&
+                    fmt.formatTag == WAVE_FORMAT_IEEE_FLOAT) {
                 return true;
             }
             return false;
@@ -145,7 +164,7 @@ namespace encoder {
             wfile.write(mp3Frames);
         } while (sampleBuffer.size() == BYTES_READ_FROM_FILE &&
                 samplesEncoded < DATA_SAMPLESIZE);
-        
+
         std::cout << " done " << samplesEncoded << "/" << DATA_SAMPLESIZE << " Samples encoded" << "\n";
     }
 

@@ -54,6 +54,14 @@ namespace encoder {
     template<typename SampleType>
     using SlicedChannelContainer = std::vector< ChannelContainer<SampleType> >;
 
+    enum FormatTagValues {
+        WAVE_FORMAT_PCM = 0x0001,
+        WAVE_FORMAT_IEEE_FLOAT = 0x0003,
+        WAVE_FORMAT_ALAW = 0x0006,
+        WAVE_FORMAT_MULAW = 0x0007,
+        WAVE_FORMAT_EXTENSIBLE = 0xFFFE,
+    };
+
     struct RiffHeader {
         uint8_t groupId[4]; //"RIFF" for Riff File
         uint32_t fileLength; //Length in Bytes with offset 8
@@ -63,7 +71,7 @@ namespace encoder {
     struct WaveFmtHeader {
         char chunkId[4]; //"fmt "
         uint32_t chunkSize; //length of following format Header in Bytes
-        uint16_t formatTag; //1 uncompressed PCM
+        uint16_t formatTag; //see FormatTagValues
         uint16_t channels; //number of channels
         uint32_t SamplesPerSec; //SampleRate in Hz
         uint32_t bytesPerSecond; //for RAM allocation

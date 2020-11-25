@@ -39,24 +39,15 @@ namespace encoder {
         const uint32_t RIFF_FILE_HEADER_LENGTH = 12;
         const uint32_t RIFF_WAV_FORMAT_HEADER_LENGTH = 24;
         const uint32_t RIFF_WAV_DATA_HEADER_LENGTH = 8;
-
-
         const uint32_t MIN_FORMAT_HEADER_LENGTH = 16; //Chunk size: 18 or 40 only possible if not WAVE_FORMAT_PCM
 
         const char* RIFF_ID = "RIFF";
         const char* WAVE_ID = "WAVE";
-
         const char* FORMAT_ID = "fmt ";
-        const std::vector<uint8_t> FORMAT_CHUNKID{ 'f', 'm', 't', ' '};
-
         const char* DATA_ID = "data";
-        const std::vector<uint8_t> DATA_CHUNKID{ 'd', 'a', 't', 'a'};
 
-        const uint32_t WAVE_FORMAT_PCM = 0x0001;
-        const uint32_t WAVE_FORMAT_IEEE_FLOAT = 0x0003;
-        const uint32_t WAVE_FORMAT_ALAW = 0x0006;
-        const uint32_t WAVE_FORMAT_MULAW = 0x0007;
-        const uint32_t WAVE_FORMAT_EXTENSIBLE = 0xFFFE;
+        const std::vector<uint8_t> FORMAT_CHUNKID{ 'f', 'm', 't', ' '};
+        const std::vector<uint8_t> DATA_CHUNKID{ 'd', 'a', 't', 'a'};
 
         template<typename SampleTyp>
         const SampleTyp get_Value(
@@ -247,9 +238,9 @@ namespace encoder {
         handleWaveDataHEaderException(waveDataHeader);
         return waveDataHeader;
     }
-    
-    const std::size_t 
-    getSampleStartPosition(const std::vector<uint8_t>& buffer){
+
+    const std::size_t
+    getSampleStartPosition(const std::vector<uint8_t>& buffer) {
         return getDataStartPosition(buffer) + RIFF_WAV_DATA_HEADER_LENGTH;
     }
 
@@ -259,9 +250,9 @@ namespace encoder {
             buffer.erase(buffer.begin(), buffer.begin() + start);
         }
     }
-    
-    const std::size_t getDataSampleSize(const WAVE_Format& wave){
-        if( wave.data.dataSize % wave.fmt.blockAlignment != 0){//data Size is missaligned
+
+    const std::size_t getDataSampleSize(const WAVE_Format& wave) {
+        if (wave.data.dataSize % wave.fmt.blockAlignment != 0) {//data Size is missaligned
             throw ParseWAVFileError(DATASIZE_NOTALIGNED_WITH_BLOCKSIZE);
         }
         return wave.data.dataSize / wave.fmt.blockAlignment;
